@@ -16,5 +16,26 @@ namespace LibraryManagementSystem
         {
             InitializeComponent();
         }
+
+        private void btnLogin_Click(object sender, EventArgs e)
+        {
+            string username = tbUsername.Text;
+            string password = tbPassword.Text;
+
+            if (username.ToLower() == "mubashir" && password == "abc123")
+            { // Correct credentials logic
+                this.lblError.Hide();
+                this.tbPassword.Text = "";
+                this.tbUsername.Text = "";
+                MessageBox.Show("Login Successful");
+                
+            }
+            else 
+            { // Wrong credentials logic 
+                this.lblError.Show();
+                this.tbPassword.Text = "";
+                this.tbUsername.Text = "";
+            }
+        }
     }
 }
