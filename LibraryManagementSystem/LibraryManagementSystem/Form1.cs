@@ -17,6 +17,12 @@ namespace LibraryManagementSystem
             InitializeComponent();
         }
 
+        private void getID()
+        {
+            // Fetch data from database
+
+        }
+
         private void btnLogin_Click(object sender, EventArgs e)
         {
             string username = tbUsername.Text;
