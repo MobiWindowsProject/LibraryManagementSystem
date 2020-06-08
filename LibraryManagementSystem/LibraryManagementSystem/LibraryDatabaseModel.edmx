@@ -1,0 +1,593 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="LibaryDatabaseModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Author">
+          <Key>
+            <PropertyRef Name="AuthorID" />
+          </Key>
+          <Property Name="AuthorID" Type="int" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="Book_Author">
+          <Key>
+            <PropertyRef Name="BookID" />
+            <PropertyRef Name="AuthorID" />
+          </Key>
+          <Property Name="BookID" Type="char" MaxLength="13" Nullable="false" />
+          <Property Name="AuthorID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="BookTable">
+          <Key>
+            <PropertyRef Name="BarCode" />
+          </Key>
+          <Property Name="BarCode" Type="char" MaxLength="13" Nullable="false" />
+          <Property Name="Title" Type="nvarchar" MaxLength="40" Nullable="false" />
+          <Property Name="ISBN" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="PublisherName" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="Year" Type="int" Nullable="false" />
+          <Property Name="Subject" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="TotalCopies" Type="int" Nullable="false" />
+          <Property Name="AvailableCopies" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="BorrowerTable">
+          <Key>
+            <PropertyRef Name="BorrowerID" />
+            <PropertyRef Name="BookID" />
+            <PropertyRef Name="BorrowDate" />
+          </Key>
+          <Property Name="BorrowerID" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="BookID" Type="char" MaxLength="13" Nullable="false" />
+          <Property Name="BorrowDate" Type="date" Nullable="false" />
+          <Property Name="DueDate" Type="date" Nullable="false" />
+          <Property Name="IssuedBy" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="ReturnDate" Type="date" />
+          <Property Name="Fine" Type="money" Nullable="false" />
+        </EntityType>
+        <EntityType Name="LibraryStaff">
+          <Key>
+            <PropertyRef Name="LibraryStaffID" />
+          </Key>
+          <Property Name="LibraryStaffID" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="20" />
+          <Property Name="PhoneNumber" Type="nvarchar" MaxLength="12" Nullable="false" />
+          <Property Name="Address" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Patron">
+          <Key>
+            <PropertyRef Name="LibraryCardNumber" />
+          </Key>
+          <Property Name="LibraryCardNumber" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="20" />
+          <Property Name="PhoneNumber" Type="nvarchar" MaxLength="12" Nullable="false" />
+          <Property Name="Address" Type="nvarchar" MaxLength="50" />
+          <Property Name="PUserName" Type="nvarchar" MaxLength="12" Nullable="false" />
+          <Property Name="PPassword" Type="nvarchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SystemTable">
+          <Key>
+            <PropertyRef Name="UserName" />
+          </Key>
+          <Property Name="LibraryStaffID" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="12" Nullable="false" />
+          <Property Name="Password" Type="nvarchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TransactionTable">
+          <Key>
+            <PropertyRef Name="TransactionID" />
+          </Key>
+          <Property Name="TransactionID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Date" Type="date" Nullable="false" />
+          <Property Name="Time" Type="time" Precision="7" Nullable="false" />
+          <Property Name="BorrowerID" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="BookID" Type="char" MaxLength="13" Nullable="false" />
+          <Property Name="IssuedBy" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="Returned " Type="char" MaxLength="1" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Book_Author_Author">
+          <End Role="Author" Type="Self.Author" Multiplicity="1" />
+          <End Role="Book_Author" Type="Self.Book_Author" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Author">
+              <PropertyRef Name="AuthorID" />
+            </Principal>
+            <Dependent Role="Book_Author">
+              <PropertyRef Name="AuthorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Book_Author_BookTable">
+          <End Role="BookTable" Type="Self.BookTable" Multiplicity="1" />
+          <End Role="Book_Author" Type="Self.Book_Author" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BookTable">
+              <PropertyRef Name="BarCode" />
+            </Principal>
+            <Dependent Role="Book_Author">
+              <PropertyRef Name="BookID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BorrowerTable_BookID">
+          <End Role="BookTable" Type="Self.BookTable" Multiplicity="1" />
+          <End Role="BorrowerTable" Type="Self.BorrowerTable" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BookTable">
+              <PropertyRef Name="BarCode" />
+            </Principal>
+            <Dependent Role="BorrowerTable">
+              <PropertyRef Name="BookID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BorrowerTable_LibraryStaff">
+          <End Role="LibraryStaff" Type="Self.LibraryStaff" Multiplicity="1" />
+          <End Role="BorrowerTable" Type="Self.BorrowerTable" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LibraryStaff">
+              <PropertyRef Name="LibraryStaffID" />
+            </Principal>
+            <Dependent Role="BorrowerTable">
+              <PropertyRef Name="IssuedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BorrowerTable_Patron">
+          <End Role="Patron" Type="Self.Patron" Multiplicity="1" />
+          <End Role="BorrowerTable" Type="Self.BorrowerTable" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Patron">
+              <PropertyRef Name="LibraryCardNumber" />
+            </Principal>
+            <Dependent Role="BorrowerTable">
+              <PropertyRef Name="BorrowerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TransactionTable_BookID">
+          <End Role="BookTable" Type="Self.BookTable" Multiplicity="1" />
+          <End Role="TransactionTable" Type="Self.TransactionTable" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BookTable">
+              <PropertyRef Name="BarCode" />
+            </Principal>
+            <Dependent Role="TransactionTable">
+              <PropertyRef Name="BookID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TransactionTable_LibraryStaff">
+          <End Role="LibraryStaff" Type="Self.LibraryStaff" Multiplicity="1" />
+          <End Role="TransactionTable" Type="Self.TransactionTable" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LibraryStaff">
+              <PropertyRef Name="LibraryStaffID" />
+            </Principal>
+            <Dependent Role="TransactionTable">
+              <PropertyRef Name="IssuedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TransactionTable_Patron">
+          <End Role="Patron" Type="Self.Patron" Multiplicity="1" />
+          <End Role="TransactionTable" Type="Self.TransactionTable" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Patron">
+              <PropertyRef Name="LibraryCardNumber" />
+            </Principal>
+            <Dependent Role="TransactionTable">
+              <PropertyRef Name="BorrowerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="LibraryStaff_to_SystemTable">
+          <End Role="LibraryStaff" Type="Self.LibraryStaff" Multiplicity="1" />
+          <End Role="SystemTable" Type="Self.SystemTable" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LibraryStaff">
+              <PropertyRef Name="LibraryStaffID" />
+            </Principal>
+            <Dependent Role="SystemTable">
+              <PropertyRef Name="LibraryStaffID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="LibaryDatabaseModelStoreContainer">
+          <EntitySet Name="Author" EntityType="Self.Author" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Book_Author" EntityType="Self.Book_Author" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BookTable" EntityType="Self.BookTable" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BorrowerTable" EntityType="Self.BorrowerTable" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LibraryStaff" EntityType="Self.LibraryStaff" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Patron" EntityType="Self.Patron" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SystemTable" EntityType="Self.SystemTable" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TransactionTable" EntityType="Self.TransactionTable" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Book_Author_Author" Association="Self.FK_Book_Author_Author">
+            <End Role="Author" EntitySet="Author" />
+            <End Role="Book_Author" EntitySet="Book_Author" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Book_Author_BookTable" Association="Self.FK_Book_Author_BookTable">
+            <End Role="BookTable" EntitySet="BookTable" />
+            <End Role="Book_Author" EntitySet="Book_Author" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BorrowerTable_BookID" Association="Self.FK_BorrowerTable_BookID">
+            <End Role="BookTable" EntitySet="BookTable" />
+            <End Role="BorrowerTable" EntitySet="BorrowerTable" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BorrowerTable_LibraryStaff" Association="Self.FK_BorrowerTable_LibraryStaff">
+            <End Role="LibraryStaff" EntitySet="LibraryStaff" />
+            <End Role="BorrowerTable" EntitySet="BorrowerTable" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BorrowerTable_Patron" Association="Self.FK_BorrowerTable_Patron">
+            <End Role="Patron" EntitySet="Patron" />
+            <End Role="BorrowerTable" EntitySet="BorrowerTable" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TransactionTable_BookID" Association="Self.FK_TransactionTable_BookID">
+            <End Role="BookTable" EntitySet="BookTable" />
+            <End Role="TransactionTable" EntitySet="TransactionTable" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TransactionTable_LibraryStaff" Association="Self.FK_TransactionTable_LibraryStaff">
+            <End Role="LibraryStaff" EntitySet="LibraryStaff" />
+            <End Role="TransactionTable" EntitySet="TransactionTable" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TransactionTable_Patron" Association="Self.FK_TransactionTable_Patron">
+            <End Role="Patron" EntitySet="Patron" />
+            <End Role="TransactionTable" EntitySet="TransactionTable" />
+          </AssociationSet>
+          <AssociationSet Name="LibraryStaff_to_SystemTable" Association="Self.LibraryStaff_to_SystemTable">
+            <End Role="LibraryStaff" EntitySet="LibraryStaff" />
+            <End Role="SystemTable" EntitySet="SystemTable" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="LibaryDatabaseModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Author">
+          <Key>
+            <PropertyRef Name="AuthorID" />
+          </Key>
+          <Property Name="AuthorID" Type="Int32" Nullable="false" />
+          <Property Name="FirstName" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LastName" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="BookTables" Relationship="Self.Book_Author" FromRole="Author" ToRole="BookTable" />
+        </EntityType>
+        <EntityType Name="BookTable">
+          <Key>
+            <PropertyRef Name="BarCode" />
+          </Key>
+          <Property Name="BarCode" Type="String" MaxLength="13" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="Title" Type="String" MaxLength="40" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ISBN" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PublisherName" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Year" Type="Int32" Nullable="false" />
+          <Property Name="Subject" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="TotalCopies" Type="Int32" Nullable="false" />
+          <Property Name="AvailableCopies" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="BorrowerTables" Relationship="Self.FK_BorrowerTable_BookID" FromRole="BookTable" ToRole="BorrowerTable" />
+          <NavigationProperty Name="TransactionTables" Relationship="Self.FK_TransactionTable_BookID" FromRole="BookTable" ToRole="TransactionTable" />
+          <NavigationProperty Name="Authors" Relationship="Self.Book_Author" FromRole="BookTable" ToRole="Author" />
+        </EntityType>
+        <EntityType Name="BorrowerTable">
+          <Key>
+            <PropertyRef Name="BorrowerID" />
+            <PropertyRef Name="BookID" />
+            <PropertyRef Name="BorrowDate" />
+          </Key>
+          <Property Name="BorrowerID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="BookID" Type="String" MaxLength="13" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="BorrowDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="DueDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="IssuedBy" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ReturnDate" Type="DateTime" Precision="0" />
+          <Property Name="Fine" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <NavigationProperty Name="BookTable" Relationship="Self.FK_BorrowerTable_BookID" FromRole="BorrowerTable" ToRole="BookTable" />
+          <NavigationProperty Name="LibraryStaff" Relationship="Self.FK_BorrowerTable_LibraryStaff" FromRole="BorrowerTable" ToRole="LibraryStaff" />
+          <NavigationProperty Name="Patron" Relationship="Self.FK_BorrowerTable_Patron" FromRole="BorrowerTable" ToRole="Patron" />
+        </EntityType>
+        <EntityType Name="LibraryStaff">
+          <Key>
+            <PropertyRef Name="LibraryStaffID" />
+          </Key>
+          <Property Name="LibraryStaffID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FirstName" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LastName" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="12" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Address" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="BorrowerTables" Relationship="Self.FK_BorrowerTable_LibraryStaff" FromRole="LibraryStaff" ToRole="BorrowerTable" />
+          <NavigationProperty Name="TransactionTables" Relationship="Self.FK_TransactionTable_LibraryStaff" FromRole="LibraryStaff" ToRole="TransactionTable" />
+          <NavigationProperty Name="SystemTables" Relationship="Self.LibraryStaff_to_SystemTable" FromRole="LibraryStaff" ToRole="SystemTable" />
+        </EntityType>
+        <EntityType Name="Patron">
+          <Key>
+            <PropertyRef Name="LibraryCardNumber" />
+          </Key>
+          <Property Name="LibraryCardNumber" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FirstName" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LastName" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="12" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Address" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PUserName" Type="String" MaxLength="12" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PPassword" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="BorrowerTables" Relationship="Self.FK_BorrowerTable_Patron" FromRole="Patron" ToRole="BorrowerTable" />
+          <NavigationProperty Name="TransactionTables" Relationship="Self.FK_TransactionTable_Patron" FromRole="Patron" ToRole="TransactionTable" />
+        </EntityType>
+        <EntityType Name="SystemTable">
+          <Key>
+            <PropertyRef Name="UserName" />
+          </Key>
+          <Property Name="LibraryStaffID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UserName" Type="String" MaxLength="12" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="LibraryStaff" Relationship="Self.LibraryStaff_to_SystemTable" FromRole="SystemTable" ToRole="LibraryStaff" />
+        </EntityType>
+        <EntityType Name="TransactionTable">
+          <Key>
+            <PropertyRef Name="TransactionID" />
+          </Key>
+          <Property Name="TransactionID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Time" Type="Time" Nullable="false" Precision="7" />
+          <Property Name="BorrowerID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="BookID" Type="String" MaxLength="13" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="IssuedBy" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Returned_" Type="String" MaxLength="1" FixedLength="true" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="BookTable" Relationship="Self.FK_TransactionTable_BookID" FromRole="TransactionTable" ToRole="BookTable" />
+          <NavigationProperty Name="LibraryStaff" Relationship="Self.FK_TransactionTable_LibraryStaff" FromRole="TransactionTable" ToRole="LibraryStaff" />
+          <NavigationProperty Name="Patron" Relationship="Self.FK_TransactionTable_Patron" FromRole="TransactionTable" ToRole="Patron" />
+        </EntityType>
+        <Association Name="FK_BorrowerTable_BookID">
+          <End Role="BookTable" Type="Self.BookTable" Multiplicity="1" />
+          <End Role="BorrowerTable" Type="Self.BorrowerTable" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BookTable">
+              <PropertyRef Name="BarCode" />
+            </Principal>
+            <Dependent Role="BorrowerTable">
+              <PropertyRef Name="BookID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TransactionTable_BookID">
+          <End Role="BookTable" Type="Self.BookTable" Multiplicity="1" />
+          <End Role="TransactionTable" Type="Self.TransactionTable" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BookTable">
+              <PropertyRef Name="BarCode" />
+            </Principal>
+            <Dependent Role="TransactionTable">
+              <PropertyRef Name="BookID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BorrowerTable_LibraryStaff">
+          <End Role="LibraryStaff" Type="Self.LibraryStaff" Multiplicity="1" />
+          <End Role="BorrowerTable" Type="Self.BorrowerTable" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LibraryStaff">
+              <PropertyRef Name="LibraryStaffID" />
+            </Principal>
+            <Dependent Role="BorrowerTable">
+              <PropertyRef Name="IssuedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BorrowerTable_Patron">
+          <End Role="Patron" Type="Self.Patron" Multiplicity="1" />
+          <End Role="BorrowerTable" Type="Self.BorrowerTable" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Patron">
+              <PropertyRef Name="LibraryCardNumber" />
+            </Principal>
+            <Dependent Role="BorrowerTable">
+              <PropertyRef Name="BorrowerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TransactionTable_LibraryStaff">
+          <End Role="LibraryStaff" Type="Self.LibraryStaff" Multiplicity="1" />
+          <End Role="TransactionTable" Type="Self.TransactionTable" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LibraryStaff">
+              <PropertyRef Name="LibraryStaffID" />
+            </Principal>
+            <Dependent Role="TransactionTable">
+              <PropertyRef Name="IssuedBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="LibraryStaff_to_SystemTable">
+          <End Role="LibraryStaff" Type="Self.LibraryStaff" Multiplicity="1" />
+          <End Role="SystemTable" Type="Self.SystemTable" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LibraryStaff">
+              <PropertyRef Name="LibraryStaffID" />
+            </Principal>
+            <Dependent Role="SystemTable">
+              <PropertyRef Name="LibraryStaffID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TransactionTable_Patron">
+          <End Role="Patron" Type="Self.Patron" Multiplicity="1" />
+          <End Role="TransactionTable" Type="Self.TransactionTable" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Patron">
+              <PropertyRef Name="LibraryCardNumber" />
+            </Principal>
+            <Dependent Role="TransactionTable">
+              <PropertyRef Name="BorrowerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Book_Author">
+          <End Role="Author" Type="Self.Author" Multiplicity="*" />
+          <End Role="BookTable" Type="Self.BookTable" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="LibraryDatabaseEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Authors" EntityType="Self.Author" />
+          <EntitySet Name="BookTables" EntityType="Self.BookTable" />
+          <EntitySet Name="BorrowerTables" EntityType="Self.BorrowerTable" />
+          <EntitySet Name="LibraryStaffs" EntityType="Self.LibraryStaff" />
+          <EntitySet Name="Patrons" EntityType="Self.Patron" />
+          <EntitySet Name="SystemTables" EntityType="Self.SystemTable" />
+          <EntitySet Name="TransactionTables" EntityType="Self.TransactionTable" />
+          <AssociationSet Name="FK_BorrowerTable_BookID" Association="Self.FK_BorrowerTable_BookID">
+            <End Role="BookTable" EntitySet="BookTables" />
+            <End Role="BorrowerTable" EntitySet="BorrowerTables" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TransactionTable_BookID" Association="Self.FK_TransactionTable_BookID">
+            <End Role="BookTable" EntitySet="BookTables" />
+            <End Role="TransactionTable" EntitySet="TransactionTables" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BorrowerTable_LibraryStaff" Association="Self.FK_BorrowerTable_LibraryStaff">
+            <End Role="LibraryStaff" EntitySet="LibraryStaffs" />
+            <End Role="BorrowerTable" EntitySet="BorrowerTables" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BorrowerTable_Patron" Association="Self.FK_BorrowerTable_Patron">
+            <End Role="Patron" EntitySet="Patrons" />
+            <End Role="BorrowerTable" EntitySet="BorrowerTables" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TransactionTable_LibraryStaff" Association="Self.FK_TransactionTable_LibraryStaff">
+            <End Role="LibraryStaff" EntitySet="LibraryStaffs" />
+            <End Role="TransactionTable" EntitySet="TransactionTables" />
+          </AssociationSet>
+          <AssociationSet Name="LibraryStaff_to_SystemTable" Association="Self.LibraryStaff_to_SystemTable">
+            <End Role="LibraryStaff" EntitySet="LibraryStaffs" />
+            <End Role="SystemTable" EntitySet="SystemTables" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TransactionTable_Patron" Association="Self.FK_TransactionTable_Patron">
+            <End Role="Patron" EntitySet="Patrons" />
+            <End Role="TransactionTable" EntitySet="TransactionTables" />
+          </AssociationSet>
+          <AssociationSet Name="Book_Author" Association="Self.Book_Author">
+            <End Role="Author" EntitySet="Authors" />
+            <End Role="BookTable" EntitySet="BookTables" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="LibaryDatabaseModelStoreContainer" CdmEntityContainer="LibraryDatabaseEntities">
+          <EntitySetMapping Name="Authors">
+            <EntityTypeMapping TypeName="LibaryDatabaseModel.Author">
+              <MappingFragment StoreEntitySet="Author">
+                <ScalarProperty Name="AuthorID" ColumnName="AuthorID" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BookTables">
+            <EntityTypeMapping TypeName="LibaryDatabaseModel.BookTable">
+              <MappingFragment StoreEntitySet="BookTable">
+                <ScalarProperty Name="BarCode" ColumnName="BarCode" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="ISBN" ColumnName="ISBN" />
+                <ScalarProperty Name="PublisherName" ColumnName="PublisherName" />
+                <ScalarProperty Name="Year" ColumnName="Year" />
+                <ScalarProperty Name="Subject" ColumnName="Subject" />
+                <ScalarProperty Name="TotalCopies" ColumnName="TotalCopies" />
+                <ScalarProperty Name="AvailableCopies" ColumnName="AvailableCopies" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BorrowerTables">
+            <EntityTypeMapping TypeName="LibaryDatabaseModel.BorrowerTable">
+              <MappingFragment StoreEntitySet="BorrowerTable">
+                <ScalarProperty Name="BorrowerID" ColumnName="BorrowerID" />
+                <ScalarProperty Name="BookID" ColumnName="BookID" />
+                <ScalarProperty Name="BorrowDate" ColumnName="BorrowDate" />
+                <ScalarProperty Name="DueDate" ColumnName="DueDate" />
+                <ScalarProperty Name="IssuedBy" ColumnName="IssuedBy" />
+                <ScalarProperty Name="ReturnDate" ColumnName="ReturnDate" />
+                <ScalarProperty Name="Fine" ColumnName="Fine" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LibraryStaffs">
+            <EntityTypeMapping TypeName="LibaryDatabaseModel.LibraryStaff">
+              <MappingFragment StoreEntitySet="LibraryStaff">
+                <ScalarProperty Name="LibraryStaffID" ColumnName="LibraryStaffID" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Patrons">
+            <EntityTypeMapping TypeName="LibaryDatabaseModel.Patron">
+              <MappingFragment StoreEntitySet="Patron">
+                <ScalarProperty Name="LibraryCardNumber" ColumnName="LibraryCardNumber" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="PUserName" ColumnName="PUserName" />
+                <ScalarProperty Name="PPassword" ColumnName="PPassword" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SystemTables">
+            <EntityTypeMapping TypeName="LibaryDatabaseModel.SystemTable">
+              <MappingFragment StoreEntitySet="SystemTable">
+                <ScalarProperty Name="LibraryStaffID" ColumnName="LibraryStaffID" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TransactionTables">
+            <EntityTypeMapping TypeName="LibaryDatabaseModel.TransactionTable">
+              <MappingFragment StoreEntitySet="TransactionTable">
+                <ScalarProperty Name="TransactionID" ColumnName="TransactionID" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Time" ColumnName="Time" />
+                <ScalarProperty Name="BorrowerID" ColumnName="BorrowerID" />
+                <ScalarProperty Name="BookID" ColumnName="BookID" />
+                <ScalarProperty Name="IssuedBy" ColumnName="IssuedBy" />
+                <ScalarProperty Name="Returned_" ColumnName="Returned " />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="Book_Author" TypeName="LibaryDatabaseModel.Book_Author" StoreEntitySet="Book_Author">
+            <EndProperty Name="Author">
+              <ScalarProperty Name="AuthorID" ColumnName="AuthorID" />
+            </EndProperty>
+            <EndProperty Name="BookTable">
+              <ScalarProperty Name="BarCode" ColumnName="BookID" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

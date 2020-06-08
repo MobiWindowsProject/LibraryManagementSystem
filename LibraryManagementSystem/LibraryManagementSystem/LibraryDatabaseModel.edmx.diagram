@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="5a2341e991e44bb1b1e351fe34be7511" Name="Diagram1" ZoomLevel="74">
+        <EntityTypeShape EntityType="LibaryDatabaseModel.Author" Width="1.5" PointX="0.5" PointY="2.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="LibaryDatabaseModel.BookTable" Width="1.5" PointX="3.25" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="LibaryDatabaseModel.BorrowerTable" Width="1.5" PointX="7" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="LibaryDatabaseModel.LibraryStaff" Width="1.5" PointX="5.125" PointY="4.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="LibaryDatabaseModel.Patron" Width="1.5" PointX="2.375" PointY="8.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="LibaryDatabaseModel.SystemTable" Width="1.5" PointX="5.375" PointY="8.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="LibaryDatabaseModel.TransactionTable" Width="1.5" PointX="3.125" PointY="4.625" IsExpanded="true" />
+        <AssociationConnector Association="LibaryDatabaseModel.FK_BorrowerTable_BookID" ManuallyRouted="false" />
+        <AssociationConnector Association="LibaryDatabaseModel.FK_TransactionTable_BookID" ManuallyRouted="false" />
+        <AssociationConnector Association="LibaryDatabaseModel.FK_BorrowerTable_LibraryStaff" ManuallyRouted="false" />
+        <AssociationConnector Association="LibaryDatabaseModel.FK_BorrowerTable_Patron" ManuallyRouted="false" />
+        <AssociationConnector Association="LibaryDatabaseModel.FK_TransactionTable_LibraryStaff" ManuallyRouted="false" />
+        <AssociationConnector Association="LibaryDatabaseModel.LibraryStaff_to_SystemTable" ManuallyRouted="false" />
+        <AssociationConnector Association="LibaryDatabaseModel.FK_TransactionTable_Patron" ManuallyRouted="false" />
+        <AssociationConnector Association="LibaryDatabaseModel.Book_Author" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
